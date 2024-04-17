@@ -13,7 +13,9 @@
       "launchBrowser": true,
       "applicationUrl": "http://localhost:5072",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DB_USERNAME": "username",
+        "DB_PASSWORD": "password"
       },
       "dotnetRunMessages": true
     },
@@ -22,7 +24,9 @@
       "launchBrowser": true,
       "applicationUrl": "https://localhost:7053;http://localhost:5072",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DB_USERNAME": "username",
+        "DB_PASSWORD": "password"
       },
       "dotnetRunMessages": true
     },
@@ -30,7 +34,9 @@
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DB_USERNAME": "username",
+        "DB_PASSWORD": "password"
       }
     }
   }
