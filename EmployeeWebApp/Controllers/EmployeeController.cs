@@ -4,11 +4,11 @@ using EmployeeWebApp.Models;
 
 namespace EmployeeWebApp.Controllers;
 
-public class HomeController : Controller
+public class EmployeeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly ILogger<EmployeeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger)
+    public EmployeeController(ILogger<EmployeeController> logger)
     {
         _logger = logger;
     }
