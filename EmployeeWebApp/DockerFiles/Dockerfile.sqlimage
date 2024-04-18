@@ -10,8 +10,8 @@ ENV MSSQL_USER=sa
 VOLUME /var/opt/mssql/data
 VOLUME /var/opt/mssql/log
 
-# Expose port 1434
-EXPOSE 1434
+# Expose port 1433
+EXPOSE 1433
 
 # Start the SQL Server container
 CMD ["/opt/mssql/bin/sqlservr"]
@@ -19,4 +19,4 @@ CMD ["/opt/mssql/bin/sqlservr"]
 
 # Build the image as follows: docker build -t sql-container -f Dockerfile.sqlimage .
 
-# Running the container, first go to the folder, DockerFiles: docker run -d -p 1434:1434 -v $(pwd)/data:/var/opt/mssql/data -v $(pwd)/log:/var/opt/mssql/log --name sql-server sql-container
+# Running the container, first go to the folder, DockerFiles: docker run -d -p 1433:1433 -v $(pwd)/data:/var/opt/mssql/data -v $(pwd)/log:/var/opt/mssql/log --name sql-server sql-container
