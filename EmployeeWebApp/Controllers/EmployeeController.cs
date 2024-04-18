@@ -7,18 +7,17 @@ namespace EmployeeWebApp.Controllers;
 public class EmployeeController : Controller
 {
     private readonly ILogger<EmployeeController> _logger;
-    private readonly EmployeeDbContext _dbContext;
+    private readonly IEmployeeFactory _employeeFactory;
 
-    public EmployeeController(ILogger<EmployeeController> logger, EmployeeDbContext dbContext)
+    public EmployeeController(ILogger<EmployeeController> logger, IEmployeeFactory employeeFactory)
     {
         _logger = logger;
-        _dbContext = dbContext;
+        _employeeFactory = employeeFactory;
     }
 
-    public IEnumerable<Employee> Index()
+    public IActionResult Index()
     {
-        var response = _dbContext.Employees.ToList();
-        return response;
+        return View(_employeeFactory.GetEmployeeList());
     }
 
     public IActionResult Privacy()
