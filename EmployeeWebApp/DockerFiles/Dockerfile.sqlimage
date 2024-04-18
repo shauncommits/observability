@@ -1,0 +1,22 @@
+FROM mcr.microsoft.com/azure-sql-edge
+
+# Set environment variables
+ENV ACCEPT_EULA=1
+ENV MSSQL_SA_PASSWORD=Password_123
+ENV MSSQL_PID=Developer
+ENV MSSQL_USER=sa
+
+# Set volume mounts
+VOLUME /var/opt/mssql/data
+VOLUME /var/opt/mssql/log
+
+# Expose port 1434
+EXPOSE 1434
+
+# Start the SQL Server container
+CMD ["/opt/mssql/bin/sqlservr"]
+
+
+# Build the image as follows: docker build -t sql-container -f Dockerfile.sqlimage .
+
+# Running the container, first go to the folder, DockerFiles: docker run -d -p 1434:1434 -v $(pwd)/data:/var/opt/mssql/data -v $(pwd)/log:/var/opt/mssql/log --name sql-server sql-container
