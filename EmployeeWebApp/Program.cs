@@ -1,29 +1,34 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using EmployeeWebApp.Models;
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+string currentDirectory = Directory.GetCurrentDirectory();
+string relativeLaunchSettingsPath = Path.Combine(currentDirectory,"Properties" ,"launchSettings.json");
+
 var configBuilder = new ConfigurationBuilder()
-    .AddJsonFile("launchSettings.json")
+    .AddJsonFile(relativeLaunchSettingsPath)
     .Build();
 
-string username = configBuilder["profiles:Development:environmentVariables:DB_USERNAME"];
-string password = configBuilder["profiles:Development:environmentVariables:DB_PASSWORD"];
-string dbName = configBuilder["profiles:Development:environmentVariables:DB_NAME"];
+string username = configBuilder["profiles:http:environmentVariables:DB_USERNAME"];
+string password = configBuilder["profiles:http:environmentVariables:DB_PASSWORD"];
+string dbName = configBuilder["profiles:http:environmentVariables:DB_NAME"];
 
 var appSettingsBuilder = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
     .Build();
-string _connStr = @"
-  Server=localhost,1433;
-  Database=EmployeeDB;
-  User Id=sa;
-  Password=Password_123";
 
-string connectionString = appSettingsBuilder["ConnectionStrings:"+_connStr]
+string connectionString = appSettingsBuilder["ConnectionStrings:DefaultConnection"]
     .Replace("${DB_NAME}", dbName)
     .Replace("${DB_USERNAME}", username)
     .Replace("${DB_PASSWORD}", password);
+
+builder.Services.AddDbContext<EmployeeDbContext>(options =>
+    options.UseSqlServer(connectionString));
+
 
 
 var app = builder.Build();
@@ -48,4 +53,3 @@ app.MapControllerRoute(
     pattern: "{controller=Employee}/{action=Index}/{id?}");
 
 app.Run();
-
