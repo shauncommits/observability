@@ -15,8 +15,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DB_NAME": "EmployeeDB",
-        "DB_USERNAME": "username",
-        "DB_PASSWORD": "password"
+        "DB_USERNAME": "sa",
+        "DB_PASSWORD": "Password_123"
       },
       "dotnetRunMessages": true
     },
@@ -27,8 +27,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DB_NAME": "EmployeeDB",
-        "DB_USERNAME": "username",
-        "DB_PASSWORD": "password"
+        "DB_USERNAME": "sa",
+        "DB_PASSWORD": "Password_123"
       },
       "dotnetRunMessages": true
     },
@@ -38,8 +38,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DB_NAME": "EmployeeDB",
-        "DB_USERNAME": "username",
-        "DB_PASSWORD": "password"
+        "DB_USERNAME": "sa",
+        "DB_PASSWORD": "Password_123"
       }
     }
   }
