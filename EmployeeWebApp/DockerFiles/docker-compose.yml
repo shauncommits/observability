@@ -1,0 +1,58 @@
+version: '3'
+
+services:
+  
+  elasticsearch:
+    container_name: elasticsearch-container
+    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+    ports:
+      - 9200:9200
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    environment:
+      - discovery.type=single-node
+    networks:
+      - elastic-network
+  
+  kibana:
+    container_name: kibana-container
+    image: kibana:7.17.20
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
+    environment:
+      - ELASTICSEARCH_URL=http://localhost:9200
+    networks:
+      - elastic-network
+  
+  logstash:
+    container_name: logstash-container
+    depends_on:
+      - elasticsearch
+      - kibana
+    image: docker.elastic.co/logstash/logstash:7.17.20
+    volumes:
+      - logstash-config:/usr/share/logstash/data
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+    environment:
+      - NODE_NAME="logstash"
+      - xpack.monitoring.enabled=false
+      #      - ELASTIC_USER=elastic
+      #      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - ELASTIC_HOSTS=https://elasticsearch:9200
+    networks:
+      - elastic-network
+    command: logstash -f /usr/share/logstash/pipeline/logstash.conf
+    ports:
+      - "5044:5044/udp"
+    mem_limit: ${LS_MEM_LIMIT}
+
+networks:
+  elastic-network:
+    driver: bridge
+
+volumes:
+  elasticsearch-data:
+  logstash-config:
+    driver: local
