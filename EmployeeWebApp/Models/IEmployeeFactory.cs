@@ -7,4 +7,5 @@ public interface IEmployeeFactory
     void UpdateEmployee(Employee employee);
     void DeleteEmployee(int id);
     IEnumerable<Employee> GetEmployeeList();
+    Task SeedInitialData();
 }

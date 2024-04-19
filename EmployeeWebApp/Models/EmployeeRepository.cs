@@ -1,13 +1,18 @@
+using Nest;
+
 namespace EmployeeWebApp.Models;
 
 public class EmployeeRepository: IEmployeeFactory
 {
-    private List<Employee> _employeeList;
     private readonly EmployeeDbContext _dbContext;
+    private readonly IElasticClient _client;
+    private IEnumerable<Employee> employees;
 
-    public EmployeeRepository(EmployeeDbContext dbContext)
+    public EmployeeRepository(EmployeeDbContext dbContext, IElasticClient client)
     {
         _dbContext = dbContext;
+        _client = client;
+        employees = _dbContext.Employees.ToList();
     }
 
     public Employee GetEmployeeById(int id)
@@ -44,6 +49,20 @@ public class EmployeeRepository: IEmployeeFactory
 
     public IEnumerable<Employee> GetEmployeeList()
     {
-        return _dbContext.Employees.ToList();
+        return employees;
+    }
+    
+    public async Task SeedInitialData()
+    {
+        
+        foreach (var employee in employees)
+        {
+            var indexResponse = await _client.IndexDocumentAsync(employee);
+            if (!indexResponse.IsValid)
+            {
+                // Handle error if indexing fails
+                Console.WriteLine($"Error indexing document: {indexResponse.DebugInformation}");
+            }
+        }
     }
 }

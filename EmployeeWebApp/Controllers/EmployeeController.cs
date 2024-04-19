@@ -9,11 +9,14 @@ public class EmployeeController : Controller
 {
     private readonly ILogger<EmployeeController> _logger;
     private readonly IEmployeeFactory _employeeFactory;
+    private readonly IElasticClient _client;
 
-    public EmployeeController(ILogger<EmployeeController> logger, IEmployeeFactory employeeFactory)
+    public EmployeeController(ILogger<EmployeeController> logger, IEmployeeFactory employeeFactory, IElasticClient client)
     {
         _logger = logger;
         _employeeFactory = employeeFactory;
+        _client = client;
+        _employeeFactory.SeedInitialData();
     }
 
     public IActionResult Index(string searchQuery)
@@ -22,12 +25,9 @@ public class EmployeeController : Controller
 
         if (!string.IsNullOrEmpty(searchQuery))
         {
-            // Create an instance of the Elasticsearch client
-            var settings = new ConnectionSettings(new Uri("http://localhost:9200"));
-            var client = new ElasticClient(settings);
 
             // Perform the search using the NEST package
-            var searchResponse = client.Search<Employee>(s => s
+            var searchResponse = _client.Search<Employee>(s => s
                 .Query(q => q
                     .Match(m => m
                         .Field(f => f.Name)
@@ -112,5 +112,6 @@ public class EmployeeController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
+    
 }
 

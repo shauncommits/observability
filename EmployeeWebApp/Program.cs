@@ -1,5 +1,6 @@
 ﻿using EmployeeWebApp.Models;
 using Microsoft.EntityFrameworkCore;
+using Nest;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +31,9 @@ string connectionString = appSettingsBuilder["ConnectionStrings:DefaultConnectio
 builder.Services.AddDbContext<EmployeeDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-
+// Create an instance of the Elasticsearch client
+var settings = new ConnectionSettings(new Uri("http://localhost:9200")).DefaultIndex("employee_web-app");
+builder.Services.AddSingleton<IElasticClient>(new ElasticClient(settings));
 
 var app = builder.Build();
 
