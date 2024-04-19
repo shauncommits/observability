@@ -21,9 +21,9 @@ public class EmployeeRepository: IEmployeeFactory
         _dbContext.SaveChanges();
     }
 
-    public void UpdateEmployee(int id, Employee updatedEmployee)
+    public void UpdateEmployee(Employee updatedEmployee)
     {
-        var employee = _dbContext.Employees.Find(id);
+        var employee = _dbContext.Employees.Find(updatedEmployee.Id);
        
         employee.Name = updatedEmployee.Name;
         employee.Department = updatedEmployee.Department;
