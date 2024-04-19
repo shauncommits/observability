@@ -6,27 +6,27 @@
 
 <h2>Employee List</h2>
 
-<p>
-    <a asp-action="Add" class="btn btn-primary">Add Employee</a>
-</p>
+<div class="search" style="align-items: center">
+    <form method="get" action="@Url.Action("Index")">
+        <div class="form-group">
+            <input type="text" name="searchQuery" class="form-control" placeholder="Search employees">
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+</div>
 
-<form method="get" action="@Url.Action("Index")">
-    <div class="form-group">
-        <input type="text" name="searchQuery" class="form-control" placeholder="Search employees">
-    </div>
-    <button type="submit" class="btn btn-primary">Search</button>
-</form>
-
-<table class="table">
-    <thead>
+<div>
+    
+    <table class="table">
+        <thead>
         <tr>
             <th>Name</th>
             <th>Email</th>
             <th>Department</th>
             <th></th>
         </tr>
-    </thead>
-    <tbody>
+        </thead>
+        <tbody>
         @foreach (var employee in Model)
         {
             <tr>
@@ -39,7 +39,7 @@
                 </td>
             </tr>
         }
-        
+            
         @if (!Model.Any())
         {
             <tr>
@@ -47,5 +47,12 @@
             </tr>
         }
         </tbody>
-</table>
+    </table>
+    
+     <p>
+         <a asp-action="Add" class="btn btn-primary">Add Employee</a>
+         </p>
+</div>
+
+
 
