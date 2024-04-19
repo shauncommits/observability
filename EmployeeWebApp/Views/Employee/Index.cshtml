@@ -10,6 +10,13 @@
     <a asp-action="Add" class="btn btn-primary">Add Employee</a>
 </p>
 
+<form method="get" action="@Url.Action("Index")">
+    <div class="form-group">
+        <input type="text" name="searchQuery" class="form-control" placeholder="Search employees">
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
 <table class="table">
     <thead>
         <tr>
@@ -32,6 +39,13 @@
                 </td>
             </tr>
         }
-    </tbody>
+        
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="4">No employees found.</td>
+            </tr>
+        }
+        </tbody>
 </table>
 
