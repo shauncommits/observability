@@ -16,27 +16,49 @@ public class EmployeeController : Controller
         _logger = logger;
         _employeeFactory = employeeFactory;
         _client = client;
-        _employeeFactory.SeedInitialData();
     }
 
     public IActionResult Index(string searchQuery)
     {
         IEnumerable<Employee> employees;
-
+            
         if (!string.IsNullOrEmpty(searchQuery))
         {
-
-            // Perform the search using the NEST package
+            switch (searchQuery.ToLower())
+            {
+                case "none":
+                    searchQuery = "0";
+                    break;
+                case "hr":
+                    searchQuery = "1";
+                    break;
+                case "it":
+                    searchQuery = "2";
+                    break;
+                case "dev":
+                    searchQuery = "3";
+                    break;
+                case "sdet":
+                    searchQuery = "4";
+                    break;
+                case "sd1":
+                    searchQuery = "5";
+                    break;
+                case "sd2":
+                    searchQuery = "6";
+                    break;
+                case "architect":
+                    searchQuery = "7";
+                    break;
+            }
             var searchResponse = _client.Search<Employee>(s => s
                 .Query(q => q
-                    .Match(m => m
-                        .Field(f => f.Name)
+                    .QueryString(qs => qs
                         .Query(searchQuery)
                     )
                 )
             );
 
-            // Get the search results
             employees = searchResponse.Documents;
         }
         else
