@@ -18,7 +18,7 @@ public class EmployeeController : Controller
         _client = client;
     }
 
-    public IActionResult Index(string searchQuery)
+    public async Task<IActionResult> Index(string searchQuery)
     {
         IEnumerable<Employee> employees;
             
@@ -64,7 +64,15 @@ public class EmployeeController : Controller
         else
         {
             // Retrieve all employees if no search query is provided
-            employees = _employeeFactory.GetEmployeeList();
+            
+            ///// Uncomment this to show how is slow to retrieve data from a database compared using elastic search and also remove async Task<IActionResult> to just IActionResult as return type 
+            // employees = _employeeFactory.GetEmployeeList();
+            
+            var searchResponse = await _client.SearchAsync<Employee>(s => s
+                .MatchAll()
+                .Index("employee_elastic_search").Size(10000));
+
+            employees = searchResponse.Documents;
         }
 
         return View(employees);
