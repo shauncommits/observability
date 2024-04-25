@@ -1,6 +1,15 @@
 version: '3'
 
 services:
+  employee:
+    image: shaunmbolompo297/webapp:2
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    networks:
+      - elastic-network
   
   elasticsearch:
     container_name: elasticsearch-container
@@ -11,6 +20,7 @@ services:
       - elasticsearch-data:/usr/share/elasticsearch/data
     environment:
       - discovery.type=single-node
+      - xpack.security.enabled=false
     networks:
       - elastic-network
   
@@ -22,37 +32,43 @@ services:
     depends_on:
       - elasticsearch
     environment:
-      - ELASTICSEARCH_URL=http://localhost:9200
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    networks:
+      - elastic-network
+    
+  jaeger:
+    container_name: jaeger-container
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - 16687:16687
     networks:
       - elastic-network
   
-  logstash:
-    container_name: logstash-container
-    depends_on:
-      - elasticsearch
-      - kibana
-    image: docker.elastic.co/logstash/logstash:7.17.20
-    volumes:
-      - logstash-config:/usr/share/logstash/data
-      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+  sql-edge:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile.sqlimage
+    container_name: sql-edge-container
+    image: mcr.microsoft.com/azure-sql-edge
+    ports:
+      - 1433:1433
     environment:
-      - NODE_NAME="logstash"
-      - xpack.monitoring.enabled=false
-      #      - ELASTIC_USER=elastic
-      #      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-      - ELASTIC_HOSTS=https://elasticsearch:9200
+      - ACCEPT_EULA=1
+      - MSSQL_SA_PASSWORD=Password_123
+      - MSSQL_PID=Developer
+      - MSSQL_USER=sa
+    volumes:
+      - ./data:/var/opt/mssql/data
+      - ./log:/var/opt/mssql/log
     networks:
       - elastic-network
-    command: logstash -f /usr/share/logstash/pipeline/logstash.conf
-    ports:
-      - "5044:5044/udp"
-    mem_limit: ${LS_MEM_LIMIT}
-
+    command: ["/opt/mssql/bin/sqlservr"]
+    
+  
 networks:
   elastic-network:
     driver: bridge
 
 volumes:
   elasticsearch-data:
-  logstash-config:
-    driver: local
+  
