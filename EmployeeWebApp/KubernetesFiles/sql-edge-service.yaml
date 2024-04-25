@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: sql-edge-container
+  name: sql-edge-service
+spec:
+  type: ClusterIP
+  ports:
+    - name: sql-edge-service
+      port: 1433
+      targetPort: 1433
+      
+  selector:
+    app: sql-edge-container
