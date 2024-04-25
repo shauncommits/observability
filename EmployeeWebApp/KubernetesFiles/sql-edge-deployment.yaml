@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sql-edge-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: sql-edge-container
+  template:
+    metadata:
+      labels:
+        app: sql-edge-container
+    spec:
+      containers:
+        - name: sql-edge
+          image: mcr.microsoft.com/azure-sql-edge
+          ports:
+            - containerPort: 1433
+          volumeMounts:
+            - name: sql-edge-data
+              mountPath: /var/opt/mssql/data
+            - name: sql-edge-log
+              mountPath: /var/opt/mssql/log
+          env:
+            - name: ACCEPT_EULA
+              value: "1"
+            - name: MSSQL_SA_PASSWORD
+              value: Password_123
+            - name: MSSQL_PID
+              value: Developer
+            - name: MSSQL_USER
+              value: sa
+      volumes:
+        - name: sql-edge-data
+          persistentVolumeClaim:
+            claimName: sql-edge-data-pvc
+        - name: sql-edge-log
+          persistentVolumeClaim:
+            claimName: sql-edge-log-pvc
+
