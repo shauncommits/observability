@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: employee
+  name: employee-web-service
+spec:
+  type: NodePort
+  ports:
+    - name: employee-web-service
+      port: 5000
+      targetPort: 5000
+      nodePort: 31000
+  selector:
+    app: employee
