@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: employee-webapp-replicaset
+  labels:
+    app: employee
+  
+spec:
+  template:
+    metadata:
+      name: employee-webapp-pod
+      labels:
+        app: employee
+        
+    spec:
+      containers:
+        - name: employee-webapp-container
+          image: shaunmbolompo297/webapp:2
+          ports:
+            - containerPort: 5000
+              name: employee
+  
+  replicas: 3
+  selector:
+    matchLabels:
+      app: employee
